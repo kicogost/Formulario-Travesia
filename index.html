@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#f0fdf4" />
+  <title>Regularización España — Consulta Gratuita</title>
+  <meta name="description" content="Descubre si puedes regularizar tu situación en España. Consulta gratuita con expertos en extranjería." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 30%, #f8fafc 100%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 16px;
+    }
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: #fff;
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .screen { display: none; text-align: center; }
+    .screen.active { display: block; animation: fadeIn 0.35s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .progress-track { width: 100%; background: #e2e8f0; border-radius: 999px; height: 10px; margin-bottom: 24px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #16a34a); border-radius: 999px; transition: width 0.5s ease; }
+    .badge { display: inline-block; background: linear-gradient(135deg, #dcfce7, #d1fae5); border: 2px dashed #22c55e; border-radius: 14px; padding: 10px 16px; margin-bottom: 20px; }
+    .badge span { font-size: 15px; font-weight: 700; color: #16a34a; }
+    .badge-solid { border-style: solid; }
+    .emoji-big { font-size: 64px; margin-bottom: 16px; }
+    .emoji-q { font-size: 48px; margin-bottom: 12px; }
+    h1 { font-size: 26px; font-weight: 800; color: #1e293b; margin-bottom: 8px; line-height: 1.3; }
+    h2.subtitle { font-size: 18px; font-weight: 600; color: #475569; margin-bottom: 12px; line-height: 1.4; }
+    h2.q-title { font-size: 21px; font-weight: 800; color: #1e293b; margin-bottom: 12px; line-height: 1.35; }
+    h2.result-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .desc { font-size: 17px; color: #64748b; margin-bottom: 24px; line-height: 1.6; }
+    .sub { font-size: 14px; color: #94a3b8; margin-bottom: 28px; }
+    .q-step { font-size: 13px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .explain { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 28px; text-align: left; }
+    .explain p { font-size: 15px; color: #64748b; line-height: 1.65; margin: 0; }
+    .btn-main {
+      width: 100%; padding: 18px 32px; font-size: 19px; font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #22c55e, #16a34a); border: none; border-radius: 16px;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(34,197,94,0.4); transition: transform 0.15s;
+    }
+    .btn-main:active { transform: scale(0.97); }
+    .btn-yes, .btn-no {
+      width: 100%; padding: 18px 24px; font-size: 17px; font-weight: 700;
+      border: 3px solid; border-radius: 14px; cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-yes { background: #f0fdf4; color: #16a34a; border-color: #86efac; }
+    .btn-yes:active, .btn-yes.selected { background: #22c55e; color: #fff; border-color: #22c55e; }
+    .btn-no { background: #fef2f2; color: #dc2626; border-color: #fca5a5; margin-top: 14px; }
+    .btn-no:active, .btn-no.selected { background: #ef4444; color: #fff; border-color: #ef4444; }
+    .btn-wa {
+      width: 100%; padding: 18px 32px; font-size: 19px; font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 16px;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(37,211,102,0.4); display: flex;
+      align-items: center; justify-content: center; gap: 10px; text-decoration: none;
+    }
+    .btn-ig {
+      width: 100%; padding: 18px 32px; font-size: 19px; font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, #E1306C, #833AB4, #5851DB); border: none; border-radius: 16px;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(131,58,180,0.4); display: flex;
+      align-items: center; justify-content: center; gap: 10px; text-decoration: none;
+    }
+    .btn-back {
+      width: 100%; margin-top: 14px; padding: 14px; font-size: 15px; font-weight: 600;
+      color: #64748b; background: #f1f5f9; border: none; border-radius: 12px; cursor: pointer;
+    }
+    .small-note { font-size: 13px; color: #94a3b8; margin-top: 16px; }
+    .result-text { font-size: 17px; color: #475569; line-height: 1.6; margin-bottom: 28px; }
+    .fail-text { font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- WELCOME -->
+  <div id="screen-welcome" class="screen active">
+    <div class="emoji-big">🇪🇸</div>
+    <div class="badge"><span>🎁 CONSULTA GRATUITA — PLAZAS LIMITADAS</span></div>
+    <h1>Consigue tus papeles en España</h1>
+    <h2 class="subtitle">Te ayudamos GRATIS a dar el primer paso</h2>
+    <p class="desc">Responde 3 preguntas rápidas y <strong>consigue tu cita gratuita</strong> con un experto en extranjería que revisará tu caso.</p>
+    <p class="sub">⏱️ Solo toma 30 segundos · ✅ 100% gratis · 🔒 Confidencial</p>
+    <button class="btn-main" onclick="startForm()">QUIERO MI CITA GRATIS →</button>
+  </div>
+
+  <!-- QUESTION -->
+  <div id="screen-question" class="screen">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="q-step" id="q-step"></div>
+    <div class="emoji-q" id="q-emoji"></div>
+    <h2 class="q-title" id="q-title"></h2>
+    <div class="explain"><p id="q-explain"></p></div>
+    <button class="btn-yes" id="btn-yes" onclick="answer('yes')"></button>
+    <button class="btn-no" id="btn-no" onclick="answer('no')"></button>
+  </div>
+
+  <!-- PASS -->
+  <div id="screen-pass" class="screen">
+    <div class="emoji-big">🎉</div>
+    <h2 class="result-title" style="color:#16a34a;">¡FELICIDADES! CUMPLES LOS REQUISITOS</h2>
+    <div class="badge badge-solid" style="margin-bottom:20px;"><span>🎁 Tu cita GRATUITA está lista</span></div>
+    <p class="result-text">Un experto en extranjería va a <strong>revisar tu caso sin costo</strong> y te dirá exactamente qué hacer para conseguir tus papeles. Escríbenos ahora por WhatsApp para agendar tu cita.</p>
+    <a class="btn-wa" id="btn-whatsapp" href="#" target="_blank" onclick="clickWhatsApp()">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.612.638l4.67-1.318A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.16 0-4.16-.68-5.803-1.836l-.245-.167-3.387.957.893-3.26-.19-.265A9.953 9.953 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+      AGENDAR MI CITA GRATIS
+    </a>
+    <p class="small-note">🔒 Confidencial · ⏳ Plazas limitadas</p>
+    <button class="btn-back" onclick="restart()">← Volver a empezar</button>
+  </div>
+
+  <!-- FAIL -->
+  <div id="screen-fail" class="screen">
+    <div class="emoji-big">😔</div>
+    <h2 class="result-title" style="color:#dc2626;">No cumples todos los requisitos</h2>
+    <p class="fail-text" id="fail-msg"></p>
+    <p class="fail-text" style="margin-bottom:28px;"><strong>Pero tranquilo/a</strong>, puede que haya otras formas de conseguir tus papeles. Síguenos en Instagram y escríbenos por mensaje directo — te orientamos <strong>gratis</strong>.</p>
+    <a class="btn-ig" href="https://www.instagram.com/iglesiasextranjeria?igsh=eWRtaHFoZHZ4cmQz&utm_source=qr" target="_blank" onclick="clickInstagram()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      ESCRIBIRNOS EN INSTAGRAM
+    </a>
+    <button class="btn-back" onclick="restart()">← Volver a empezar</button>
+  </div>
+
+</div>
+
+<script>
+var WHATSAPP_LINK = "https://wa.me/34694269008?text=Hola%2C%20pasé%20el%20filtro%20y%20quiero%20mi%20cita%20gratuita%20para%20regularizarme";
+var GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbyKP4Bt7hfUSEZi3Wu85l2XSxYpn79hXpJhGbMHjI-T4sFWXfvj7qFpmTjgrU8REXB-/exec";
+
+var questions = [
+  { id:1, emoji:"📄", title:"¿Estás en situación irregular en España?",
+    explanation:'💡 <strong>¿Qué significa esto?</strong><br>Esto significa que estás viviendo en España PERO no tienes papeles (no tienes NIE con permiso de residencia, ni permiso de trabajo). Si entraste como turista y te quedaste, o cruzaste sin visa… estás en situación irregular.',
+    yesLabel:"✅ Sí, no tengo papeles", noLabel:"❌ No, ya tengo papeles", correctAnswer:"yes" },
+  { id:2, emoji:"📅", title:"¿Llegaste a España ANTES del 31 de diciembre de 2025?",
+    explanation:'💡 <strong>¿Qué significa esto?</strong><br>Necesitamos saber si ya estabas en España antes de esa fecha. Si llegaste antes del 31 de diciembre de 2025, marca que SÍ. Si llegaste después, marca que NO.',
+    yesLabel:"✅ Sí, llegué antes", noLabel:"❌ No, llegué después", correctAnswer:"yes" },
+  { id:3, emoji:"⚖️", title:"¿Tienes antecedentes penales?",
+    explanation:'💡 <strong>¿Qué significa esto?</strong><br>Antecedentes penales significa que un juez te declaró culpable de un delito (robo, pelea grave, drogas, etc.) ya sea en España o en tu país de origen. Si nunca tuviste problemas con la justicia, la respuesta es "NO".',
+    yesLabel:"✅ Sí, tengo antecedentes", noLabel:"❌ No, estoy limpio", correctAnswer:"no" }
+];
+
+var failMessages = {
+  1:"Parece que ya tienes tus papeles en regla. Este proceso es para personas en situación irregular.",
+  2:"Lamentablemente, necesitas haber llegado a España antes del 31 de diciembre de 2025 para este proceso.",
+  3:"Los antecedentes penales pueden complicar el proceso de regularización. Pero no pierdas la esperanza, hay opciones."
+};
+
+var currentQ = 0, answers = [], animating = false;
+
+function track(event, details) {
+  if (!GOOGLE_SHEETS_WEBHOOK) return;
+  var payload = Object.assign({ timestamp: new Date().toISOString(), event: event, referrer: document.referrer || "directo" }, details || {});
+  try { fetch(GOOGLE_SHEETS_WEBHOOK, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) }); } catch(e) {}
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+function startForm() {
+  currentQ = 0; answers = [];
+  track("form_started");
+  showQuestion();
+  showScreen('question');
+}
+
+function showQuestion() {
+  var q = questions[currentQ];
+  document.getElementById('progress-fill').style.width = ((currentQ+1)/questions.length*100)+'%';
+  document.getElementById('q-step').textContent = 'Pregunta '+(currentQ+1)+' de '+questions.length;
+  document.getElementById('q-emoji').textContent = q.emoji;
+  document.getElementById('q-title').textContent = q.title;
+  document.getElementById('q-explain').innerHTML = q.explanation;
+  document.getElementById('btn-yes').textContent = q.yesLabel;
+  document.getElementById('btn-no').textContent = q.noLabel;
+  document.getElementById('btn-yes').className = 'btn-yes';
+  document.getElementById('btn-no').className = 'btn-no';
+}
+
+function answer(val) {
+  if (animating) return;
+  animating = true;
+  var q = questions[currentQ];
+  var ok = val === q.correctAnswer;
+  if (val==='yes') document.getElementById('btn-yes').classList.add('selected');
+  else document.getElementById('btn-no').classList.add('selected');
+  answers.push({ questionId:q.id, answer:val, correct:ok });
+  track("question_answered", { questionId:q.id, questionTitle:q.title, answer:val, passed:ok });
+  setTimeout(function(){
+    animating = false;
+    if (!ok) {
+      track("form_failed", { failedAtQuestion:q.id, failedAtTitle:q.title, answers:JSON.stringify(answers) });
+      document.getElementById('fail-msg').textContent = failMessages[q.id];
+      showScreen('fail');
+      return;
+    }
+    if (currentQ+1 < questions.length) {
+      currentQ++;
+      showQuestion();
+      var el = document.getElementById('screen-question');
+      el.classList.remove('active'); void el.offsetWidth; el.classList.add('active');
+    } else {
+      track("form_passed", { answers:JSON.stringify(answers) });
+      document.getElementById('btn-whatsapp').href = WHATSAPP_LINK;
+      showScreen('pass');
+    }
+  }, 400);
+}
+
+function clickWhatsApp() { track("click_whatsapp"); }
+function clickInstagram() { track("click_instagram"); }
+function restart() { showScreen('welcome'); }
+</script>
+
+</body>
+</html>
