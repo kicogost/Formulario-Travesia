@@ -105,8 +105,8 @@
     <div class="emoji-q" id="q-emoji"></div>
     <h2 class="q-title" id="q-title"></h2>
     <div class="explain"><p id="q-explain"></p></div>
-    <button class="btn-yes" id="btn-yes" onclick="answer('yes')"></button>
-    <button class="btn-no" id="btn-no" onclick="answer('no')"></button>
+    <button class="btn-yes" id="btn-first" onclick="answerFirst()"></button>
+    <button class="btn-no" id="btn-second" onclick="answerSecond()"></button>
   </div>
 
   <!-- PASS -->
@@ -150,7 +150,7 @@ var questions = [
     yesLabel:"✅ Sí, llegué antes", noLabel:"❌ No, llegué después", correctAnswer:"yes" },
   { id:3, emoji:"⚖️", title:"¿Tienes antecedentes penales?",
     explanation:'💡 <strong>¿Qué significa esto?</strong><br>Antecedentes penales significa que un juez te declaró culpable de un delito (robo, pelea grave, drogas, etc.) ya sea en España o en tu país de origen. Si nunca tuviste problemas con la justicia, la respuesta es "NO".',
-    yesLabel:"✅ Sí, tengo antecedentes", noLabel:"❌ No, estoy limpio", correctAnswer:"no" }
+    yesLabel:"❌ Sí, tengo antecedentes", noLabel:"✅ No, estoy limpio", correctAnswer:"no" }
 ];
 
 var failMessages = {
@@ -183,10 +183,27 @@ function showQuestion() {
   document.getElementById('q-emoji').textContent = q.emoji;
   document.getElementById('q-title').textContent = q.title;
   document.getElementById('q-explain').innerHTML = q.explanation;
-  document.getElementById('btn-yes').textContent = q.yesLabel;
-  document.getElementById('btn-no').textContent = q.noLabel;
-  document.getElementById('btn-yes').className = 'btn-yes';
-  document.getElementById('btn-no').className = 'btn-no';
+  var btnFirst = document.getElementById('btn-first');
+  var btnSecond = document.getElementById('btn-second');
+  btnFirst.className = 'btn-yes';
+  btnSecond.className = 'btn-no';
+  if (q.correctAnswer === 'no') {
+    btnFirst.textContent = q.noLabel;
+    btnSecond.textContent = q.yesLabel;
+  } else {
+    btnFirst.textContent = q.yesLabel;
+    btnSecond.textContent = q.noLabel;
+  }
+}
+
+function answerFirst() {
+  var q = questions[currentQ];
+  answer(q.correctAnswer === 'no' ? 'no' : 'yes');
+}
+
+function answerSecond() {
+  var q = questions[currentQ];
+  answer(q.correctAnswer === 'no' ? 'yes' : 'no');
 }
 
 function answer(val) {
@@ -194,8 +211,8 @@ function answer(val) {
   animating = true;
   var q = questions[currentQ];
   var ok = val === q.correctAnswer;
-  if (val==='yes') document.getElementById('btn-yes').classList.add('selected');
-  else document.getElementById('btn-no').classList.add('selected');
+  if (ok) document.getElementById('btn-first').classList.add('selected');
+  else document.getElementById('btn-second').classList.add('selected');
   setTimeout(function(){
     animating = false;
     if (!ok) {
