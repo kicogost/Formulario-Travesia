@@ -115,7 +115,7 @@
     <h2 class="result-title" style="color:#16a34a;">¡FELICIDADES! CUMPLES LOS REQUISITOS</h2>
     <div class="badge badge-solid" style="margin-bottom:20px;"><span>🎁 Tu cita GRATUITA está lista</span></div>
     <p class="result-text">Un experto en extranjería va a <strong>revisar tu caso sin costo</strong> y te dirá exactamente qué hacer para conseguir tus papeles. Escríbenos ahora por WhatsApp para agendar tu cita.</p>
-    <a class="btn-wa" id="btn-whatsapp" href="#" target="_blank" onclick="clickWhatsApp()">
+    <a class="btn-wa" id="btn-whatsapp" href="https://wa.me/34694269008?text=Hola%2C%20pasé%20el%20filtro%20y%20quiero%20mi%20cita%20gratuita%20para%20regularizarme" target="_blank" onclick="clickWhatsApp()">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.612.638l4.67-1.318A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.16 0-4.16-.68-5.803-1.836l-.245-.167-3.387.957.893-3.26-.19-.265A9.953 9.953 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
       AGENDAR MI CITA GRATIS
     </a>
@@ -139,8 +139,7 @@
 </div>
 
 <script>
-var WHATSAPP_LINK = "https://wa.me/34694269008?text=Hola%2C%20pasé%20el%20filtro%20y%20quiero%20mi%20cita%20gratuita%20para%20regularizarme";
-var GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbyKP4Bt7hfUSEZi3Wu85l2XSxYpn79hXpJhGbMHjI-T4sFWXfvj7qFpmTjgrU8REXB-/exec";
+var GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbwc5qrD9mZe_LzHOZ5LrOewKrIXWP1JnDv8XNKTBz3nxiyknaq7K-GZVrImZbycA4Sf/exec";
 
 var questions = [
   { id:1, emoji:"📄", title:"¿Estás en situación irregular en España?",
@@ -160,12 +159,10 @@ var failMessages = {
   3:"Los antecedentes penales pueden complicar el proceso de regularización. Pero no pierdas la esperanza, hay opciones."
 };
 
-var currentQ = 0, answers = [], animating = false;
+var currentQ = 0, animating = false;
 
-function track(event, details) {
-  if (!GOOGLE_SHEETS_WEBHOOK) return;
-  var payload = Object.assign({ timestamp: new Date().toISOString(), event: event, referrer: document.referrer || "directo" }, details || {});
-  try { fetch(GOOGLE_SHEETS_WEBHOOK, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) }); } catch(e) {}
+function track(event) {
+  try { fetch(GOOGLE_SHEETS_WEBHOOK, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ timestamp: new Date().toISOString(), event: event }) }); } catch(e) {}
 }
 
 function showScreen(id) {
@@ -174,8 +171,7 @@ function showScreen(id) {
 }
 
 function startForm() {
-  currentQ = 0; answers = [];
-  track("form_started");
+  currentQ = 0;
   showQuestion();
   showScreen('question');
 }
@@ -200,12 +196,9 @@ function answer(val) {
   var ok = val === q.correctAnswer;
   if (val==='yes') document.getElementById('btn-yes').classList.add('selected');
   else document.getElementById('btn-no').classList.add('selected');
-  answers.push({ questionId:q.id, answer:val, correct:ok });
-  track("question_answered", { questionId:q.id, questionTitle:q.title, answer:val, passed:ok });
   setTimeout(function(){
     animating = false;
     if (!ok) {
-      track("form_failed", { failedAtQuestion:q.id, failedAtTitle:q.title, answers:JSON.stringify(answers) });
       document.getElementById('fail-msg').textContent = failMessages[q.id];
       showScreen('fail');
       return;
@@ -216,8 +209,6 @@ function answer(val) {
       var el = document.getElementById('screen-question');
       el.classList.remove('active'); void el.offsetWidth; el.classList.add('active');
     } else {
-      track("form_passed", { answers:JSON.stringify(answers) });
-      document.getElementById('btn-whatsapp').href = WHATSAPP_LINK;
       showScreen('pass');
     }
   }, 400);
