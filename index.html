@@ -300,10 +300,7 @@ function answer(val) {
       el.classList.remove('active'); void el.offsetWidth; el.classList.add('active');
     } else {
       try {
-        fbq('track', 'Lead', {
-          content_name: 'formulario_regularizacion',
-          source: 'qualified_pass_screen'
-        });
+        fbq('trackCustom', 'QualifiedCase');
       } catch(e) {}
       showScreen('pass');
     }
@@ -317,18 +314,9 @@ function clickWhatsApp(event) {
 
   if (event) event.preventDefault();
 
-  try {
-    fbq('track', 'Lead', {
-      content_name: 'formulario_regularizacion',
-      source: 'whatsapp_click'
-    });
-
-    setTimeout(function() {
-      window.open(url, '_blank');
-    }, 800);
-  } catch(e) {
+  setTimeout(function() {
     window.open(url, '_blank');
-  }
+  }, 300);
 
   return false;
 }
