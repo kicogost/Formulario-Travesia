@@ -299,6 +299,12 @@ function answer(val) {
       var el = document.getElementById('screen-question');
       el.classList.remove('active'); void el.offsetWidth; el.classList.add('active');
     } else {
+      try {
+        fbq('track', 'Lead', {
+          content_name: 'formulario_regularizacion',
+          source: 'qualified_pass_screen'
+        });
+      } catch(e) {}
       showScreen('pass');
     }
   }, 400);
