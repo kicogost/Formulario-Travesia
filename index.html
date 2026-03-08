@@ -299,9 +299,6 @@ function answer(val) {
       var el = document.getElementById('screen-question');
       el.classList.remove('active'); void el.offsetWidth; el.classList.add('active');
     } else {
-      try {
-        fbq('trackCustom', 'QualifiedLead');
-      } catch(e) {}
       showScreen('pass');
     }
   }, 400);
